@@ -3,12 +3,14 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import { auth, db } from './firebaseConfig'; // Import Firebase
+import SoundMixerScreen from './SoundMixerScreen';
+import DreamySleepScreen from './DreamySleepScreen';
+import { auth, db } from './firebaseConfig'; // Correctly import Firebase for Realtime DB
 
 // Create the stack navigator
 const Stack = createStackNavigator();
 
-// Main page with login and sign-up options
+// Home Screen
 function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
@@ -26,40 +28,42 @@ function HomeScreen({ navigation }) {
         <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.boxText}>Login</Text>
         </TouchableOpacity>
+
+        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('DreamySleep')}>
+          <Text style={styles.boxText}>Explore Soundscapes</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
 }
 
-// SignUp page where the user enters their details
+// SignUp Screen
 function SignUpScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
 
-  // Handle Sign Up logic
   const handleSignUp = () => {
     auth.createUserWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        saveData(user.uid);  // Save additional user details to Firestore
+        saveData(user.uid);
         Alert.alert('Sign Up Success', 'User created successfully!');
-        navigation.navigate('Home');  // Navigate back to the Home screen
+        navigation.navigate('Home');
       })
       .catch((error) => {
-        Alert.alert('Error', error.message); // Show any error that happens during sign-up
+        Alert.alert('Error', error.message);
       });
   };
 
-  // Save user data to Firestore
   const saveData = async (userId) => {
     try {
-      await db.collection('users').add({
+      await db.ref('logins' + userId).set({
         userId: userId,
         name: name,
         email: email,
       });
-      console.log('User saved to Firestore');
+      console.log('User saved to Realtime Database');
     } catch (err) {
       console.error('Error adding document:', err);
     }
@@ -67,25 +71,9 @@ function SignUpScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Name"
-        value={name}
-        onChangeText={setName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <TextInput style={styles.input} placeholder="Enter Name" value={name} onChangeText={setName} />
+      <TextInput style={styles.input} placeholder="Enter Email" value={email} onChangeText={setEmail} />
+      <TextInput style={styles.input} placeholder="Enter Password" value={password} onChangeText={setPassword} secureTextEntry />
       <TouchableOpacity style={styles.box} onPress={handleSignUp}>
         <Text style={styles.boxText}>Sign Up</Text>
       </TouchableOpacity>
@@ -93,7 +81,7 @@ function SignUpScreen({ navigation }) {
   );
 }
 
-// Login page (similar to the SignUp page)
+// Login Screen
 function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -111,19 +99,8 @@ function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Email"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+      <TextInput style={styles.input} placeholder="Enter Email" value={email} onChangeText={setEmail} />
+      <TextInput style={styles.input} placeholder="Enter Password" value={password} onChangeText={setPassword} secureTextEntry />
       <TouchableOpacity style={styles.box} onPress={handleLogin}>
         <Text style={styles.boxText}>Login</Text>
       </TouchableOpacity>
@@ -131,19 +108,22 @@ function LoginScreen() {
   );
 }
 
-// App component that contains the navigator
+// App Component
 export default function App() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home">
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="SignUp" component={SignUpScreen} />
-        <Stack.Screen name="Login" component={LoginScreen} />
-      </Stack.Navigator>
+     <NavigationContainer>
+     <Stack.Navigator>
+  <Stack.Screen name="Home" component={HomeScreen} />
+  <Stack.Screen name="SignUp" component={SignUpScreen} />
+  <Stack.Screen name="Login" component={LoginScreen} />
+  <Stack.Screen name="DreamySleep" component={DreamySleepScreen} />
+  <Stack.Screen name="SoundMixer" component={SoundMixerScreen} />
+</Stack.Navigator>
     </NavigationContainer>
   );
 }
 
+// Styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -202,5 +182,3 @@ const styles = StyleSheet.create({
     color: '#37474F',
   },
 });
-
-
