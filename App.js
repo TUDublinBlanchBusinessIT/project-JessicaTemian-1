@@ -5,6 +5,7 @@ import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'reac
 import { Feather } from '@expo/vector-icons';
 import SoundMixerScreen from './SoundMixerScreen'; 
 import DreamySleepScreen from './DreamySleepScreen';
+import SleepPreferencesScreen from './SleepPreferencesScreen';
 import { auth, db } from './firebaseConfig'; // Ensure Firebase is correctly configured
 
 // Create the stack navigator
@@ -141,6 +142,7 @@ export default function App() {
         <Stack.Screen name="Login" component={LoginScreen} />
         <Stack.Screen name="DreamySleep" component={DreamySleepScreen} />
         <Stack.Screen name="SoundMixer" component={SoundMixerScreen} />
+    <Stack.Screen name="SleepPreferences" component={SleepPreferencesScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
