@@ -3,9 +3,9 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { StyleSheet, View, Text, TouchableOpacity, TextInput, Alert } from 'react-native';
 import { Feather } from '@expo/vector-icons';
-import SoundMixerScreen from './SoundMixerScreen';
+import SoundMixerScreen from './SoundMixerScreen'; 
 import DreamySleepScreen from './DreamySleepScreen';
-import { auth, db } from './firebaseConfig'; // Correctly import Firebase for Realtime DB
+import { auth, db } from './firebaseConfig'; // Ensure Firebase is correctly configured
 
 // Create the stack navigator
 const Stack = createStackNavigator();
@@ -19,16 +19,13 @@ function HomeScreen({ navigation }) {
         <Text style={styles.greeting}>Welcome Back!</Text>
         <Text style={styles.description}>Improve your sleep with personalized soundscapes.</Text>
       </View>
-
       <View style={styles.boxContainer}>
         <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('SignUp')}>
           <Text style={styles.boxText}>Sign Up</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.boxText}>Login</Text>
         </TouchableOpacity>
-
         <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('DreamySleep')}>
           <Text style={styles.boxText}>Explore Soundscapes</Text>
         </TouchableOpacity>
@@ -58,7 +55,7 @@ function SignUpScreen({ navigation }) {
 
   const saveData = async (userId) => {
     try {
-      await db.ref('logins' + userId).set({
+      await db.ref('logins/' + userId).set({
         userId: userId,
         name: name,
         email: email,
@@ -71,9 +68,25 @@ function SignUpScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.input} placeholder="Enter Name" value={name} onChangeText={setName} />
-      <TextInput style={styles.input} placeholder="Enter Email" value={email} onChangeText={setEmail} />
-      <TextInput style={styles.input} placeholder="Enter Password" value={password} onChangeText={setPassword} secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Name"
+        value={name}
+        onChangeText={setName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
       <TouchableOpacity style={styles.box} onPress={handleSignUp}>
         <Text style={styles.boxText}>Sign Up</Text>
       </TouchableOpacity>
@@ -82,7 +95,7 @@ function SignUpScreen({ navigation }) {
 }
 
 // Login Screen
-function LoginScreen() {
+function LoginScreen({ navigation }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
@@ -90,7 +103,8 @@ function LoginScreen() {
     auth.signInWithEmailAndPassword(email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        Alert.alert('Login Success', 'User logged in successfully!');
+        Alert.alert('Login Success', 'Welcome back!');
+        navigation.navigate('DreamySleep'); // Navigate to DreamySleep screen
       })
       .catch((error) => {
         Alert.alert('Error', error.message);
@@ -99,8 +113,19 @@ function LoginScreen() {
 
   return (
     <View style={styles.container}>
-      <TextInput style={styles.input} placeholder="Enter Email" value={email} onChangeText={setEmail} />
-      <TextInput style={styles.input} placeholder="Enter Password" value={password} onChangeText={setPassword} secureTextEntry />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Email"
+        value={email}
+        onChangeText={setEmail}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Enter Password"
+        value={password}
+        onChangeText={setPassword}
+        secureTextEntry
+      />
       <TouchableOpacity style={styles.box} onPress={handleLogin}>
         <Text style={styles.boxText}>Login</Text>
       </TouchableOpacity>
@@ -111,14 +136,14 @@ function LoginScreen() {
 // App Component
 export default function App() {
   return (
-     <NavigationContainer>
-     <Stack.Navigator>
-  <Stack.Screen name="Home" component={HomeScreen} />
-  <Stack.Screen name="SignUp" component={SignUpScreen} />
-  <Stack.Screen name="Login" component={LoginScreen} />
-  <Stack.Screen name="DreamySleep" component={DreamySleepScreen} />
-  <Stack.Screen name="SoundMixer" component={SoundMixerScreen} />
-</Stack.Navigator>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name="Home" component={HomeScreen} />
+        <Stack.Screen name="SignUp" component={SignUpScreen} />
+        <Stack.Screen name="Login" component={LoginScreen} />
+        <Stack.Screen name="DreamySleep" component={DreamySleepScreen} />
+        <Stack.Screen name="SoundMixer" component={SoundMixerScreen} />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
@@ -159,6 +184,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
     borderRadius: 5,
+    width: '100%',
   },
   boxContainer: {
     width: '90%',
