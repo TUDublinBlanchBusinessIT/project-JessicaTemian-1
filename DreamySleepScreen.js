@@ -1,26 +1,51 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Audio } from 'expo-av'; // Import the Audio module
 
-// Dreamy Sleep Screen
 export default function DreamySleepScreen({ navigation }) {
+  // Function to play sound
+  const playSound = async (sound) => {
+    try {
+      const { sound: playbackObject } = await Audio.Sound.createAsync(sound);
+      await playbackObject.playAsync();
+    } catch (error) {
+      console.error('Error playing sound:', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Dreamy Sleep</Text>
 
-      <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Ocean Waves */ }}>
+      {/* Ocean Waves Button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => playSound(require('./assets/sounds/ocean.wav.mp3'))}
+      >
         <Text style={styles.buttonText}>Ocean Waves</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Rain & Thunder */ }}>
+      {/* Rain & Thunder Button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => playSound(require('./assets/sounds/rain.wav.mp3'))}
+      >
         <Text style={styles.buttonText}>Rain & Thunder</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Forest Ambience */ }}>
+      {/* Forest Ambience Button */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => playSound(require('./assets/sounds/forest.wav.mp3'))}
+      >
         <Text style={styles.buttonText}>Forest Ambience</Text>
       </TouchableOpacity>
 
-      {/* Move the "Go to Sound Mixer" button here */}
-      <TouchableOpacity onPress={() => navigation.navigate('SoundMixer')} style={styles.soundMixerButton}>
+      {/* Go to Sound Mixer Button */}
+      <TouchableOpacity
+        style={styles.soundMixerButton}
+        onPress={() => navigation.navigate('SoundMixer')}
+      >
         <Text style={styles.buttonText}>Go to Sound Mixer</Text>
       </TouchableOpacity>
     </View>
@@ -61,6 +86,7 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 40,
     borderRadius: 10,
+    marginTop: 20,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
