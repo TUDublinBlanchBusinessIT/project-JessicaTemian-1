@@ -26,13 +26,11 @@ function HomeScreen({ navigation }) {
         <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('Login')}>
           <Text style={styles.boxText}>Login</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.box} onPress={() => navigation.navigate('DreamySleep')}>
-          <Text style={styles.boxText}>Explore Soundscapes</Text>
-        </TouchableOpacity>
       </View>
     </View>
   );
 }
+
 
 // SignUp Screen
 function SignUpScreen({ navigation }) {
