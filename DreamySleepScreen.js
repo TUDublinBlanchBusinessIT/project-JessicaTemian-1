@@ -10,10 +10,6 @@ export default function DreamySleepScreen({ navigation }) {
       <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Ocean Waves */ }}>
         <Text style={styles.buttonText}>Ocean Waves</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('SoundMixer')}>
-  <Text>Go to Sound Mixer</Text>
-</TouchableOpacity>
-
 
       <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Rain & Thunder */ }}>
         <Text style={styles.buttonText}>Rain & Thunder</Text>
@@ -21,6 +17,11 @@ export default function DreamySleepScreen({ navigation }) {
 
       <TouchableOpacity style={styles.button} onPress={() => { /* Logic for Forest Ambience */ }}>
         <Text style={styles.buttonText}>Forest Ambience</Text>
+      </TouchableOpacity>
+
+      {/* Move the "Go to Sound Mixer" button here */}
+      <TouchableOpacity onPress={() => navigation.navigate('SoundMixer')} style={styles.soundMixerButton}>
+        <Text style={styles.buttonText}>Go to Sound Mixer</Text>
       </TouchableOpacity>
     </View>
   );
@@ -55,10 +56,21 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  soundMixerButton: {
+    backgroundColor: '#ECEFF1',
+    paddingVertical: 15,
+    paddingHorizontal: 40,
+    borderRadius: 10,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   buttonText: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#37474F',
   },
 });
-
